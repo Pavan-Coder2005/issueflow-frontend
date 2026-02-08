@@ -36,6 +36,10 @@ const ProjectDetails = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
+  if (!id) return null; // ✅ guard
+
+  const projectId = Number(id); // ✅ convert once
+
   const [project, setProject] = useState<Project | null>(null);
   const [issues, setIssues] = useState<Issue[]>([]);
   const [members, setMembers] = useState<Member[]>([]);
@@ -60,16 +64,14 @@ const ProjectDetails = () => {
 
   /* ================= DATA LOAD ================= */
   useEffect(() => {
-    if (!id) return;
-
     let mounted = true;
 
     const loadData = async () => {
       try {
         const [projectData, issuesData, membersData] = await Promise.all([
-          getProjectById(id),
-          fetchIssuesByProject(id),
-          fetchProjectMembers(id),
+          getProjectById(projectId),
+          fetchIssuesByProject(projectId),
+          fetchProjectMembers(projectId),
         ]);
 
         if (mounted) {
@@ -89,26 +91,20 @@ const ProjectDetails = () => {
     return () => {
       mounted = false;
     };
-  }, [id]);
+  }, [projectId]);
 
   /* ================= DELETE PROJECT ================= */
   const handleDelete = async () => {
-  if (!id) return;
-  if (!confirm("Are you sure you want to delete this project?")) return;
+    if (!confirm("Are you sure you want to delete this project?")) return;
 
-  try {
-    const res = await deleteProject(id);
-
-    // ✅ Immediate user feedback
-    alert(res?.message || "Project deleted successfully");
-
-    // ✅ Then redirect
-    navigate("/dashboard/projects");
-  } catch (err: any) {
-    alert(err.message || "Failed to delete project");
-  }
-};
-
+    try {
+      const res = await deleteProject(projectId);
+      alert(res?.message || "Project deleted successfully");
+      navigate("/dashboard/projects");
+    } catch (err: any) {
+      alert(err.message || "Failed to delete project");
+    }
+  };
 
   /* ================= INVITE ================= */
   const handleInvite = async () => {
@@ -118,12 +114,11 @@ const ProjectDetails = () => {
     }
 
     try {
-      await inviteUserToProject(id!, inviteEmail);
+      await inviteUserToProject(projectId, inviteEmail);
       alert("Invite sent");
       setInviteEmail("");
       setShowInvite(false);
-
-      setMembers(await fetchProjectMembers(id!));
+      setMembers(await fetchProjectMembers(projectId));
     } catch (err: any) {
       alert(err.message || "Invite failed");
     }
@@ -135,8 +130,8 @@ const ProjectDetails = () => {
     role: "admin" | "member"
   ) => {
     try {
-      await updateMemberRole(id!, userId, role);
-      setMembers(await fetchProjectMembers(id!));
+      await updateMemberRole(projectId, userId, role);
+      setMembers(await fetchProjectMembers(projectId));
     } catch (err: any) {
       alert(err.message || "Failed to update role");
     }
@@ -147,8 +142,8 @@ const ProjectDetails = () => {
     if (!confirm("Remove member?")) return;
 
     try {
-      await removeMember(id!, userId);
-      setMembers(await fetchProjectMembers(id!));
+      await removeMember(projectId, userId);
+      setMembers(await fetchProjectMembers(projectId));
     } catch (err: any) {
       alert(err.message || "Failed to remove member");
     }
@@ -168,7 +163,7 @@ const ProjectDetails = () => {
 
         <div className="flex gap-3">
           <button
-            onClick={() => navigate(`/dashboard/projects/${id}/edit`)}
+            onClick={() => navigate(`/dashboard/projects/${projectId}/edit`)}
             className="bg-yellow-600 hover:bg-yellow-700 px-4 py-2 rounded"
           >
             Edit

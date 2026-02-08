@@ -4,8 +4,12 @@ import Modal from "../../components/Modal";
 import { getIssueById, updateIssue } from "../../api/issues.api";
 
 const EditIssue = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+
+  if (!id) return null; // ✅ guard
+
+  const issueId = Number(id); // ✅ convert once
 
   const [formData, setFormData] = useState({
     title: "",
@@ -22,10 +26,11 @@ const EditIssue = () => {
   useEffect(() => {
     const loadIssue = async () => {
       try {
-        const issue = await getIssueById(id!);
+        const issue = await getIssueById(issueId);
+
         setFormData({
           title: issue.title,
-          description: issue.description,
+          description: issue.description ?? "", // ✅ fix
           status: issue.status,
           priority: issue.priority,
         });
@@ -38,13 +43,15 @@ const EditIssue = () => {
     };
 
     loadIssue();
-  }, [id, navigate]);
+  }, [issueId, navigate]);
 
   /* =========================
      HANDLE CHANGE
   ========================= */
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -56,7 +63,7 @@ const EditIssue = () => {
     e.preventDefault();
 
     try {
-      await updateIssue(id!, formData);
+      await updateIssue(issueId, formData); // ✅ number
       navigate(-1);
     } catch (err) {
       alert("Failed to update issue");

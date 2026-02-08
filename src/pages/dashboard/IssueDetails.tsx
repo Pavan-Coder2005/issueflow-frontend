@@ -2,31 +2,23 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 import Modal from "../../components/Modal";
-import { getIssueById, deleteIssue, updateIssue } from "../../api/issues.api";
+import {
+  getIssueById,
+  deleteIssue,
+  updateIssue,
+} from "../../api/issues.api";
+import type { Issue } from "../../api/issues.api";
 import { fetchIssueActivity } from "../../api/activity.api";
 import { fetchProjectMembers } from "../../api/members.api";
 
 /* ================= TYPES ================= */
-
-interface Issue {
-  id: number;
-  project_id: number;
-  title: string;
-  description?: string;
-  status: string;
-  priority: string;
-  assignee_id?: number | null;
-  assignee_name?: string | null;
-  created_at: string;
-  resolved_at?: string | null;
-}
 
 interface Activity {
   id: number;
   action: string;
   actor_name: string;
   created_at: string;
-  metadata?: any; // 🔥 IMPORTANT
+  metadata?: any;
 }
 
 interface Member {
@@ -40,6 +32,10 @@ interface Member {
 const IssueDetails = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+
+  if (!id) return null; // ✅ guard
+
+  const issueId = Number(id); // ✅ convert once
 
   const [issue, setIssue] = useState<Issue | null>(null);
   const [members, setMembers] = useState<Member[]>([]);
@@ -55,18 +51,18 @@ const IssueDetails = () => {
 
   /* ================= FETCH DATA ================= */
   useEffect(() => {
-    if (!id) return;
-
     const load = async () => {
       try {
-        const issueData = await getIssueById(id);
-        const activityData = await fetchIssueActivity(id);
+        const issueData = await getIssueById(issueId);
+        const activityData = await fetchIssueActivity(issueId);
 
         setIssue(issueData);
         setActivity(activityData);
 
         if (isAdmin) {
-          const membersData = await fetchProjectMembers(issueData.project_id);
+          const membersData = await fetchProjectMembers(
+            issueData.project_id
+          );
           setMembers(membersData);
         }
       } catch (err) {
@@ -79,7 +75,7 @@ const IssueDetails = () => {
     };
 
     load();
-  }, [id, navigate, isAdmin]);
+  }, [issueId, navigate, isAdmin]);
 
   /* ================= UPDATE ISSUE ================= */
   const update = async (payload: Partial<Issue>) => {
@@ -88,9 +84,9 @@ const IssueDetails = () => {
     try {
       setSaving(true);
 
-      const updated = await updateIssue(issue.id.toString(), {
+      const updated = await updateIssue(issueId, {
         title: issue.title,
-        description: issue.description || "",
+        description: issue.description ?? "",
         priority: issue.priority,
         status: payload.status ?? issue.status,
         assignee_id: payload.assignee_id ?? issue.assignee_id,
@@ -98,7 +94,7 @@ const IssueDetails = () => {
 
       setIssue(updated);
 
-      const activityData = await fetchIssueActivity(issue.id.toString());
+      const activityData = await fetchIssueActivity(issueId);
       setActivity(activityData);
     } catch {
       alert("Failed to update issue");
@@ -109,10 +105,8 @@ const IssueDetails = () => {
 
   /* ================= DELETE ================= */
   const handleDelete = async () => {
-    if (!id) return;
-
     try {
-      await deleteIssue(id);
+      await deleteIssue(issueId);
       navigate("/dashboard/issues");
     } catch {
       alert("Failed to delete issue");
@@ -134,7 +128,9 @@ const IssueDetails = () => {
         {isAdmin && (
           <div className="flex gap-3">
             <button
-              onClick={() => navigate(`/dashboard/issues/${id}/edit`)}
+              onClick={() =>
+                navigate(`/dashboard/issues/${issueId}/edit`)
+              }
               className="bg-yellow-600 hover:bg-yellow-700 px-4 py-2 rounded"
             >
               Edit
@@ -295,7 +291,6 @@ const formatAction = (a: Activity) => {
       return a.action.toLowerCase().replace(/_/g, " ");
   }
 };
-
 
 const PriorityBadge = ({ priority }: { priority: string }) => {
   const color =
