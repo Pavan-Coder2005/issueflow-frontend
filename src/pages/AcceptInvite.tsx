@@ -25,7 +25,7 @@ const AcceptInvite = () => {
     const acceptInvite = async () => {
       try {
         const res = await fetch(
-          "http://localhost:3000/api/invites/accept",
+          "https://issueflow-backend-rxbo.onrender.com/api/invites/accept",
           {
             method: "POST",
             headers: {

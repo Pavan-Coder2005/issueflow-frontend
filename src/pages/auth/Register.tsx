@@ -76,7 +76,7 @@ const Register: React.FC = () => {
       setLoading(true);
 
       const res = await axios.post(
-        "http://localhost:3000/api/auth/register",
+        "https://issueflow-backend-rxbo.onrender.com/api/auth/register",
         {
           fullName: formData.fullName,
           email: formData.email,
