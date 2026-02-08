@@ -1,4 +1,4 @@
-const BASE_URL = "https://issueflow-backend-rxbo.onrender.com/api/issues";
+const BASE_URL = "https://issueflow-backend-rxbo.onrender.com/api";
 
 /* ============================
    TYPES / INTERFACES
@@ -12,8 +12,8 @@ export interface Issue {
   priority: string;
   status: string;
   assignee_id?: number | null;
-  assignee_name?: string | null; // ✅ ADD THIS
-  created_at: string;            // backend always sends this
+  assignee_name?: string | null;
+  created_at: string;
   resolved_at?: string | null;
 }
 
@@ -35,7 +35,7 @@ export interface UpdateIssuePayload {
 }
 
 /* ============================
-   HELPER: AUTH HEADER
+   AUTH HEADER
 ============================ */
 
 const authHeaders = () => {
@@ -54,17 +54,14 @@ const authHeaders = () => {
 export const createIssue = async (
   data: CreateIssuePayload
 ): Promise<Issue> => {
-  const res = await fetch(BASE_URL, {
+  const res = await fetch(`${BASE_URL}/issues`, {
     method: "POST",
     headers: authHeaders(),
     body: JSON.stringify(data),
   });
 
   const result = await res.json();
-
-  if (!res.ok) {
-    throw new Error(result.message || "Failed to create issue");
-  }
+  if (!res.ok) throw new Error(result.message || "Failed to create issue");
 
   return result.issue;
 };
@@ -74,15 +71,12 @@ export const createIssue = async (
 ============================ */
 
 export const fetchIssues = async (): Promise<Issue[]> => {
-  const res = await fetch(BASE_URL, {
+  const res = await fetch(`${BASE_URL}/issues`, {
     headers: authHeaders(),
   });
 
   const result = await res.json();
-
-  if (!res.ok) {
-    throw new Error(result.message || "Failed to fetch issues");
-  }
+  if (!res.ok) throw new Error(result.message || "Failed to fetch issues");
 
   return result.issues ?? [];
 };
@@ -92,16 +86,14 @@ export const fetchIssues = async (): Promise<Issue[]> => {
 ============================ */
 
 export const getIssueById = async (id: number): Promise<Issue> => {
-  const res = await fetch(`${BASE_URL}/${id}`, {
+  const res = await fetch(`${BASE_URL}/issues/${id}`, {
     headers: authHeaders(),
   });
 
-  if (!res.ok) {
-    throw new Error("Failed to fetch issue");
-  }
+  const result = await res.json();
+  if (!res.ok) throw new Error("Failed to fetch issue");
 
-  const data = await res.json();
-  return data.issue;
+  return result.issue;
 };
 
 /* ============================
@@ -112,17 +104,14 @@ export const updateIssue = async (
   id: number,
   data: UpdateIssuePayload
 ): Promise<Issue> => {
-  const res = await fetch(`${BASE_URL}/${id}`, {
+  const res = await fetch(`${BASE_URL}/issues/${id}`, {
     method: "PUT",
     headers: authHeaders(),
     body: JSON.stringify(data),
   });
 
   const result = await res.json();
-
-  if (!res.ok) {
-    throw new Error(result.message || "Failed to update issue");
-  }
+  if (!res.ok) throw new Error(result.message || "Failed to update issue");
 
   return result.issue;
 };
@@ -132,22 +121,19 @@ export const updateIssue = async (
 ============================ */
 
 export const deleteIssue = async (id: number) => {
-  const res = await fetch(`${BASE_URL}/${id}`, {
+  const res = await fetch(`${BASE_URL}/issues/${id}`, {
     method: "DELETE",
     headers: authHeaders(),
   });
 
   const result = await res.json();
-
-  if (!res.ok) {
-    throw new Error(result.message || "Failed to delete issue");
-  }
+  if (!res.ok) throw new Error(result.message || "Failed to delete issue");
 
   return result;
 };
 
 /* ============================
-   FETCH ISSUES BY PROJECT
+   FETCH ISSUES BY PROJECT ✅
 ============================ */
 
 export const fetchIssuesByProject = async (
@@ -161,7 +147,6 @@ export const fetchIssuesByProject = async (
   );
 
   const result = await res.json();
-
   if (!res.ok) {
     throw new Error(result.message || "Failed to fetch project issues");
   }
