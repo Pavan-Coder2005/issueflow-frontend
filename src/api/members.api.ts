@@ -6,7 +6,7 @@ const authHeaders = () => ({
 });
 
 /* ================= FETCH MEMBERS ================= */
-export const fetchProjectMembers = async (projectId: string) => {
+export const fetchProjectMembers = async (projectId: number) => {
   const res = await fetch(`${BASE_URL}/${projectId}/members`, {
     headers: authHeaders(),
   });
@@ -19,7 +19,7 @@ export const fetchProjectMembers = async (projectId: string) => {
 
 /* ================= INVITE USER ================= */
 export const inviteUser = async (
-  projectId: string,
+  projectId: number,
   email: string,
   role: "member" | "admin" = "member"
 ) => {
@@ -40,7 +40,7 @@ export const inviteUser = async (
 
 /* ================= UPDATE ROLE ================= */
 export const updateMemberRole = async (
-  projectId: string,
+  projectId: number,
   userId: number,
   role: "admin" | "member"
 ) => {
@@ -61,7 +61,7 @@ export const updateMemberRole = async (
 
 /* ================= REMOVE MEMBER ================= */
 export const removeMember = async (
-  projectId: string,
+  projectId: number,
   userId: number
 ) => {
   const res = await fetch(

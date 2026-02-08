@@ -12,7 +12,8 @@ export interface Issue {
   priority: string;
   status: string;
   assignee_id?: number | null;
-  created_at: string;          // ✅ NOT optional
+  assignee_name?: string | null; // ✅ ADD THIS
+  created_at: string;            // backend always sends this
   resolved_at?: string | null;
 }
 
@@ -21,8 +22,8 @@ export interface CreateIssuePayload {
   title: string;
   description?: string;
   priority?: string;
-  status?: string;             // ✅ added
-  assignee_id?: number | null; // ✅ added
+  status?: string;
+  assignee_id?: number | null;
 }
 
 export interface UpdateIssuePayload {
@@ -30,7 +31,7 @@ export interface UpdateIssuePayload {
   description?: string;
   priority?: string;
   status?: string;
-  assignee_id?: number | null; // ✅ added
+  assignee_id?: number | null;
 }
 
 /* ============================

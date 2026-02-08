@@ -14,7 +14,7 @@ export interface Activity {
 
 /* ================= PROJECT ACTIVITY ================= */
 export const fetchProjectActivity = async (
-  projectId: string
+  projectId: number
 ): Promise<Activity[]> => {
   const res = await fetch(
     `${BASE_URL}/activity/projects/${projectId}/activity`,
@@ -29,7 +29,7 @@ export const fetchProjectActivity = async (
 
 /* ================= ISSUE ACTIVITY ================= */
 export const fetchIssueActivity = async (
-  issueId: string
+  issueId: number
 ): Promise<Activity[]> => {
   const res = await fetch(
     `${BASE_URL}/activity/issues/${issueId}/activity`,

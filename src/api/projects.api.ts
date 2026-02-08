@@ -46,7 +46,7 @@ export const createProject = async (data: ProjectPayload) => {
     throw new Error(result.message || "Failed to create project");
   }
 
-  return result; // ✅ return full response
+  return result; // full response
 };
 
 /* =====================================
@@ -63,14 +63,13 @@ export const fetchProjects = async () => {
     throw new Error(result.message || "Failed to fetch projects");
   }
 
-  return result; // ✅ return full response
+  return result; // full response
 };
 
 /* =====================================
    GET PROJECT BY ID
 ===================================== */
-/* GET PROJECT BY ID */
-export const getProjectById = async (id: string) => {
+export const getProjectById = async (id: number): Promise<Project> => {
   const res = await fetch(`${BASE_URL}/${id}`, {
     headers: getAuthHeaders(),
   });
@@ -81,14 +80,14 @@ export const getProjectById = async (id: string) => {
     throw new Error(result.message || "Failed to fetch project");
   }
 
-  return result.data.project; // ✅ FIX
+  return result.data.project;
 };
 
 /* =====================================
    UPDATE PROJECT
 ===================================== */
 export const updateProject = async (
-  id: string,
+  id: number,
   data: ProjectPayload
 ) => {
   const res = await fetch(`${BASE_URL}/${id}`, {
@@ -103,13 +102,13 @@ export const updateProject = async (
     throw new Error(result.message || "Failed to update project");
   }
 
-  return result; // ✅ return full response
+  return result;
 };
 
 /* =====================================
    DELETE PROJECT
 ===================================== */
-export const deleteProject = async (id: string) => {
+export const deleteProject = async (id: number) => {
   const res = await fetch(`${BASE_URL}/${id}`, {
     method: "DELETE",
     headers: getAuthHeaders(),
