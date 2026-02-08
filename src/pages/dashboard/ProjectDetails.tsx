@@ -2,7 +2,8 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 
 import { getProjectById, deleteProject } from "../../api/projects.api";
-import { fetchIssuesByProject, Issue } from "../../api/issues.api";
+import { fetchIssuesByProject } from "../../api/issues.api";
+import type { Issue } from "../../api/issues.api";
 import {
   fetchProjectMembers,
   inviteUser as inviteUserToProject,

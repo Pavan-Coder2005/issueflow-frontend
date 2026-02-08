@@ -1,4 +1,4 @@
-import { Activity } from "../api/activity.api";
+import type { Activity } from "../api/activity.api";
 
 /* ================= ACTION LABELS ================= */
 

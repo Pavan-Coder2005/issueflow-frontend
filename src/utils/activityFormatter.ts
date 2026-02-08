@@ -2,9 +2,13 @@
    ACTIVITY FORMATTER
 ========================= */
 
-export const formatActivity = (a: any) => {
+type Activity = {
+  action: string;
+  metadata?: Record<string, any>;
+};
+
+export const formatActivity = (a: Activity): string => {
   const m = a.metadata ?? {};
-  const actor = a.actor_name ?? "Someone";
 
   switch (a.action) {
     /* ================= PROJECT ================= */
@@ -51,7 +55,9 @@ export const formatActivity = (a: any) => {
     /* ================= FALLBACK ================= */
 
     default:
-      return a.action?.toLowerCase().replace(/_/g, " ") ?? "did something";
+      return a.action
+        ? a.action.toLowerCase().replace(/_/g, " ")
+        : "did something";
   }
 };
 
@@ -62,5 +68,5 @@ export const formatActivity = (a: any) => {
 const capitalize = (s: string) =>
   s.charAt(0).toUpperCase() + s.slice(1);
 
-const getProjectName = (m: any) =>
+const getProjectName = (m: Record<string, any>) =>
   m.projectName ?? m.name ?? "a project";

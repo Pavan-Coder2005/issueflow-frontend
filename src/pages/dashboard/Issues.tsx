@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { fetchIssues,Issue } from "../../api/issues.api";
+import { fetchIssues} from "../../api/issues.api";
+import type { Issue } from "../../api/issues.api";
 
 const Issues = () => {
   const navigate = useNavigate();
