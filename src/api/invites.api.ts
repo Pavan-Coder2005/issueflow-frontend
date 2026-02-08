@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:3000/api/invites";
+const BASE_URL = "https://issueflow-backend-rxbo.onrender.com/api/invites";
 
 export const acceptInvite = async (token: string) => {
   const authToken = localStorage.getItem("token");

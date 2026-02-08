@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:3000/api/dashboard";
+const BASE_URL = "https://issueflow-backend-rxbo.onrender.com/api/dashboard";
 
 /* =====================================
    GET DASHBOARD SUMMARY
@@ -27,7 +27,7 @@ export const getDashboardSummary = async () => {
 
 
 export const fetchDashboardCharts = async () => {
-  const res = await fetch("http://localhost:3000/api/dashboard/charts", {
+  const res = await fetch(`${BASE_URL}/charts`, {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },

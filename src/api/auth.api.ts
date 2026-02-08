@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:3000/api/auth";
+const BASE_URL = "https://issueflow-backend-rxbo.onrender.com/api/auth";
 
 /* ================================
    AUTH HEADERS

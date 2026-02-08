@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:3000/api/issues";
+const BASE_URL = "https://issueflow-backend-rxbo.onrender.com/api/issues";
 
 /* ============================
    TYPES / INTERFACES
@@ -154,7 +154,7 @@ export const fetchIssuesByProject = async (
   projectId: number
 ): Promise<Issue[]> => {
   const res = await fetch(
-    `http://localhost:3000/api/projects/${projectId}/issues`,
+    `${BASE_URL}/projects/${projectId}/issues`,
     {
       headers: authHeaders(),
     }

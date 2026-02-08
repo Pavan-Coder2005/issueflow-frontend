@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:3000/api/projects";
+const BASE_URL = "https://issueflow-backend-rxbo.onrender.com/api/projects";
 
 const authHeaders = () => ({
   "Content-Type": "application/json",
@@ -24,7 +24,7 @@ export const inviteUser = async (
   role: "member" | "admin" = "member"
 ) => {
   const res = await fetch(
-    `http://localhost:3000/api/invites/projects/${projectId}/invite`,
+    `https://issueflow-backend-rxbo.onrender.com/api/invites/projects/${projectId}/invite`,
     {
       method: "POST",
       headers: authHeaders(),
