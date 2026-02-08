@@ -11,7 +11,8 @@ export interface Issue {
   description?: string;
   priority: string;
   status: string;
-  created_at?: string;
+  assignee_id?: number | null;
+  created_at: string;          // ✅ NOT optional
   resolved_at?: string | null;
 }
 
@@ -19,14 +20,17 @@ export interface CreateIssuePayload {
   project_id: number;
   title: string;
   description?: string;
-  priority: string;
+  priority?: string;
+  status?: string;             // ✅ added
+  assignee_id?: number | null; // ✅ added
 }
 
 export interface UpdateIssuePayload {
-  title: string;
+  title?: string;
   description?: string;
-  priority: string;
-  status: string;
+  priority?: string;
+  status?: string;
+  assignee_id?: number | null; // ✅ added
 }
 
 /* ============================
@@ -83,10 +87,10 @@ export const fetchIssues = async (): Promise<Issue[]> => {
 };
 
 /* ============================
-   FETCH ISSUE BY ID ✅ FIXED
+   FETCH ISSUE BY ID
 ============================ */
 
-export const getIssueById = async (id: string): Promise<Issue> => {
+export const getIssueById = async (id: number): Promise<Issue> => {
   const res = await fetch(`${BASE_URL}/${id}`, {
     headers: authHeaders(),
   });
@@ -96,8 +100,6 @@ export const getIssueById = async (id: string): Promise<Issue> => {
   }
 
   const data = await res.json();
-
-  // backend returns { success, issue }
   return data.issue;
 };
 
@@ -106,7 +108,7 @@ export const getIssueById = async (id: string): Promise<Issue> => {
 ============================ */
 
 export const updateIssue = async (
-  id: string,
+  id: number,
   data: UpdateIssuePayload
 ): Promise<Issue> => {
   const res = await fetch(`${BASE_URL}/${id}`, {
@@ -128,7 +130,7 @@ export const updateIssue = async (
    DELETE ISSUE
 ============================ */
 
-export const deleteIssue = async (id: string) => {
+export const deleteIssue = async (id: number) => {
   const res = await fetch(`${BASE_URL}/${id}`, {
     method: "DELETE",
     headers: authHeaders(),
@@ -148,7 +150,7 @@ export const deleteIssue = async (id: string) => {
 ============================ */
 
 export const fetchIssuesByProject = async (
-  projectId: string | number
+  projectId: number
 ): Promise<Issue[]> => {
   const res = await fetch(
     `http://localhost:3000/api/projects/${projectId}/issues`,
