@@ -61,11 +61,18 @@ const Login: React.FC = () => {
         }
       );
 
-      // Store JWT
-      localStorage.setItem("token", res.data.token);
+      // Store token
+localStorage.setItem("token", res.data.token);
 
-      // Redirect to dashboard
-      navigate("/dashboard");
+// ✅ STORE ROLE (IMPORTANT)
+localStorage.setItem("role", res.data.user.role);
+
+// ✅ ROLE-BASED REDIRECT
+if (res.data.user.role === "admin") {
+  navigate("/admin/dashboard");
+} else {
+  navigate("/dashboard");
+}
     } catch (err: any) {
       setApiError(
         err.response?.data?.message || "Login failed"

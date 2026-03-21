@@ -38,3 +38,21 @@ export const fetchDashboardCharts = async () => {
 
   return data.charts;
 };
+export const getUserDashboard = async () => {
+  const token = localStorage.getItem("token");
+
+  const res = await fetch(`${BASE_URL}/user`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+  });
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(text || "Failed to load user dashboard");
+  }
+
+  return res.json();
+};

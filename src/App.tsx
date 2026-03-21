@@ -12,7 +12,11 @@ import ResetPassword from "./pages/auth/ResetPassword";
 import AcceptInvite from "./pages/AcceptInvite";
 
 import DashboardLayout from "./layouts/DashboardLayout";
-import Dashboard from "./pages/dashboard/Dashboard";
+
+// ✅ IMPORT BOTH DASHBOARDS
+import AdminDashboard from "./pages/dashboard/AdminDashboard";
+import UserDashboard from "./pages/dashboard/UserDashboard";
+
 import Projects from "./pages/dashboard/Projects";
 import ProjectDetails from "./pages/dashboard/ProjectDetails";
 import CreateProject from "./pages/dashboard/CreateProject";
@@ -42,30 +46,47 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
 
-        {/* ===== Protected Dashboard ===== */}
+        {/* ================= USER DASHBOARD ================= */}
         <Route
           path="/dashboard"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute role="user">
               <DashboardLayout />
             </ProtectedRoute>
           }
         >
-          <Route index element={<Dashboard />} />
+          <Route index element={<UserDashboard />} />
 
-          {/* Projects */}
+          <Route path="projects" element={<Projects />} />
+          <Route path="projects/:id" element={<ProjectDetails />} />
+
+          <Route path="issues" element={<Issues />} />
+          <Route path="issues/:id" element={<IssueDetails />} />
+
+          <Route path="profile" element={<Profile />} />
+        </Route>
+
+        {/* ================= ADMIN DASHBOARD ================= */}
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute role="admin">
+              <DashboardLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route path="dashboard" element={<AdminDashboard />} />
+
           <Route path="projects" element={<Projects />} />
           <Route path="projects/new" element={<CreateProject />} />
           <Route path="projects/:id" element={<ProjectDetails />} />
           <Route path="projects/:id/edit" element={<EditProject />} />
 
-          {/* Issues */}
           <Route path="issues" element={<Issues />} />
           <Route path="issues/new" element={<CreateIssue />} />
           <Route path="issues/:id" element={<IssueDetails />} />
           <Route path="issues/:id/edit" element={<EditIssue />} />
 
-          {/* Profile */}
           <Route path="profile" element={<Profile />} />
         </Route>
       </Routes>
